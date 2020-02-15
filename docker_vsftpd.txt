@@ -1,0 +1,37 @@
+#1. Load image fauria/vsftpd
+docker load -i vsftpd.tar
+#2. Create and start container
+$ docker run -d -p 21:21 -p 20:20 -p 21100-21110:21100-21110 -v /ftpfile:/home/vsftpd \
+-e FTP_USER=demo \
+-e FTP_PASS=password \
+-e PASV_ADDRESS=192.168.106.131 \
+-e PASV_MIN_PORT=21100 \
+-e PASV_MAX_PORT=21110 \
+--name vsftpd --restart=always fauria/vsftpd
+#3. Enter to container
+$ docker exec  -it vsftpd /bin/bash
+#4. edit /etc/vsftpd/virtual_users.txt
+$ vi /etc/vsftpd/virtual_users.txt
+$ cat /etc/vsftpd/virtual_users.txt
+demo
+password
+#5. Create home folder
+$ mkdir /home/vsftpd/demo
+$ /usr/bin/db_load -T -t hash -f /etc/vsftpd/virtual_users.txt /etc/vsftpd/virtual_users.db
+$ exit
+#6. Restart container and check the container for open ports 20 and 21
+$ docker restart vsftpd
+$ docker port vsftpd
+#7. Addion to create an new user
+$ docker exec  -it vsftpd /bin/bash
+$ mkdir /home/vsftpd/tstuser
+$ vi /etc/vsftpd/virtual_users.txt
+$ cat /etc/vsftpd/virtual_users.txt
+demo
+password
+tstuser
+123456
+$ /usr/bin/db_load -T -t hash -f /etc/vsftpd/virtual_users.txt /etc/vsftpd/virtual_users.db
+$ exit
+$ docker restart vsftpd
+

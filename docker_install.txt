@@ -1,0 +1,26 @@
+Docker supports the following 64-bit version of CentOS:
+CetOS6 CetOS7 CetOS8
+
+#1. uninstall old version docker
+$ sudo yum remove docker \
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-engine
+#2. setup yum
+$ sudo yum install -y yum-utils \
+  device-mapper-persistent-data \
+  lvm2
+$ sudo yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
+#3. install docker
+$ sudo yum install docker-ce docker-ce-cli containerd.io
+#4. start and enable docker
+$ sudo systemctl enable docker
+$ sudo systemctl start docker
+#5. test
+$ sudo docker run hello-world

@@ -1,0 +1,5 @@
+FROM centos
+MAINTAINER Greenhanddm
+RUN yum -y install ftp wget nfs-utils openssh-clients openssh-server iputils passwd
+RUN echo 'root:Netapp123!' | chpasswd
+CMD /usr/sbin/init
